@@ -3,15 +3,15 @@ import * as THREE from "three";
 import { ContextoCaja } from "../contexto/ContextoCaja";
 
 export default function PanelTapa() {
-  const { 
-    unidad, 
-    tapaLargo, 
-    tapaAncho, 
-    tapaAlto, 
-    tapaLaminaLargo, 
-    tapaLaminaAncho, 
-    tapaArea, 
-    holguraTapa 
+  const {
+    unidad,
+    tapaLargo,
+    tapaAncho,
+    tapaAlto,
+    tapaLaminaLargo,
+    tapaLaminaAncho,
+    tapaArea,
+    holguraTapa
   } = useContext(ContextoCaja);
 
   const contenedorRef = useRef(null);
@@ -64,13 +64,13 @@ export default function PanelTapa() {
     escena.add(grupo);
     grupoRef.current = grupo;
 
-    const materialTapa = new THREE.MeshStandardMaterial({ 
-      color: 0xD2B48C, 
-      roughness: 0.85, 
+    const materialTapa = new THREE.MeshStandardMaterial({
+      color: 0xD2B48C,
+      roughness: 0.85,
       metalness: 0.05,
       side: THREE.DoubleSide
     });
-    
+
     const geometriaMolde = new THREE.BoxGeometry(1, 1, 1);
     const geometriaBordesMolde = new THREE.EdgesGeometry(geometriaMolde);
     const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233F });
@@ -194,15 +194,12 @@ export default function PanelTapa() {
       bordes[indice].position.set(posicion.x, posicion.y, posicion.z);
     };
 
-    // La tapa flotando boca abajo en y=0 para optimizar el zoom del canvas
     actualizarMallas(0, { x: largoEscalado, y: t, z: anchoEscalado }, { x: 0, y: altoEscalado + t / 2, z: 0 });
     actualizarMallas(1, { x: largoEscalado, y: altoEscalado, z: t }, { x: 0, y: altoEscalado / 2, z: anchoEscalado / 2 - t / 2 });
     actualizarMallas(2, { x: largoEscalado, y: altoEscalado, z: t }, { x: 0, y: altoEscalado / 2, z: -anchoEscalado / 2 + t / 2 });
     actualizarMallas(3, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: -largoEscalado / 2 + t / 2, y: altoEscalado / 2, z: 0 });
     actualizarMallas(4, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: largoEscalado / 2 - t / 2, y: altoEscalado / 2, z: 0 });
 
-    // Aletas de pegado de la tapa (mallas 5 a 8) dobladas en las esquinas interiores usando trapecios.
-    // La geometría del trapecio tiene su origen en (0,0), facilitando el nacimiento directo desde la arista de doblado sin doble arista en X.
     const aletaLargo = Math.max(altoEscalado, 0.1);
     const offset = 0.05;
     const aletaY = t + offset;
@@ -228,17 +225,17 @@ export default function PanelTapa() {
         Especificaciones técnicas para cortar y fabricar la tapa superior compatible con la base optimizada.
       </p>
 
-      <div 
-        ref={contenedorRef} 
-        style={{ 
-          width: "100%", 
-          height: "110px", 
-          marginBottom: "12px", 
-          background: "rgba(18, 35, 63, 0.02)", 
+      <div
+        ref={contenedorRef}
+        style={{
+          width: "100%",
+          height: "110px",
+          marginBottom: "12px",
+          background: "rgba(18, 35, 63, 0.02)",
           borderRadius: "4px",
           border: "1px solid rgba(18, 35, 63, 0.08)",
           cursor: "grab"
-        }} 
+        }}
       />
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: "var(--fuente-mono)", fontSize: "12px" }}>
@@ -264,11 +261,11 @@ export default function PanelTapa() {
         </div>
       </div>
 
-      <div style={{ 
-        marginTop: "14px", 
-        padding: "10px", 
-        background: "rgba(18, 35, 63, 0.05)", 
-        borderRadius: "4px", 
+      <div style={{
+        marginTop: "14px",
+        padding: "10px",
+        background: "rgba(18, 35, 63, 0.05)",
+        borderRadius: "4px",
         borderLeft: "3px solid var(--tinta)",
         fontSize: "11px",
         color: "var(--tinta)"
