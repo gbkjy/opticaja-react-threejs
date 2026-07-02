@@ -14,7 +14,6 @@ export default function Visor3D() {
 
   const carasMallasRef = useRef([]);
   const carasBordesRef = useRef([]);
-  const cuadriculaRef = useRef(null);
 
   const arrastrandoRef = useRef(false);
   const ultimoXRef = useRef(0);
@@ -72,12 +71,6 @@ export default function Visor3D() {
     const luzTrasera = new THREE.DirectionalLight(0xffeacc, 0.55);
     luzTrasera.position.set(-30, 80, -120);
     escena.add(luzTrasera);
-
-    const cuadricula = new THREE.GridHelper(220, 22, 0x8F5C2B, 0xCBB68C);
-    cuadricula.position.y = 0.01;
-    cuadricula.material.depthWrite = false;
-    escena.add(cuadricula);
-    cuadriculaRef.current = cuadricula;
 
     const planoSueloGeo = new THREE.PlaneGeometry(1000, 1000);
     const planoSueloMat = new THREE.ShadowMaterial({ opacity: 0.2 });
@@ -279,10 +272,6 @@ export default function Visor3D() {
       const dimensionMayor = Math.max(largo, ancho);
       const factor = Math.max(1, dimensionMayor / 120);
       camaraRef.current.position.set(0, 100 * factor, 180 * factor);
-
-      if (cuadriculaRef.current) {
-        cuadriculaRef.current.scale.set(factor, 1, factor);
-      }
     }
 
   }, [baseLargo, baseAncho, corte, escalaVisual, largo, ancho]);

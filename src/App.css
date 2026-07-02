@@ -225,7 +225,7 @@ input[type=range] {
   border: 1px solid var(--tinta);
   overflow: hidden;
   margin-bottom: 18px;
-  background: radial-gradient(ellipse at 50% 42%, #F5EDD8 0%, #D8CDBA 45%, #A89880 100%);
+  background: radial-gradient(circle at center, #FDFBF7 0%, #E8DFCE 65%, #C2B6A3 100%);
 }
 
 .lienzo-3d {
