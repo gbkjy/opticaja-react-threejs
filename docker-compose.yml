@@ -1,0 +1,13 @@
+services:
+  opticaja:
+    build: .
+    container_name: opticaja
+    restart: unless-stopped
+    ports:
+      - "3080:80"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

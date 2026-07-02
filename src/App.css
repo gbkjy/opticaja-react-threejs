@@ -1,0 +1,351 @@
+:root {
+  --papel: #EFE7D3;
+  --tinta: #12233F;
+  --tinta-suave: #3C567E;
+  --cuadricula-azul: rgba(18, 35, 63, 0.08);
+  --kraft: #C1834B;
+  --kraft-oscuro: #8F5C2B;
+  --acento: #D9531E;
+  --acento-suave: #F0A87A;
+  --panel: #F7F2E4;
+  --linea: #12233F;
+  --optimo: #9FD8B8;
+  --fuente-display: 'Space Grotesk', sans-serif;
+  --fuente-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-mono);
+  min-height: 100vh;
+}
+
+.aplicacion {
+  background:
+    repeating-linear-gradient(0deg, var(--cuadricula-azul) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, var(--cuadricula-azul) 0 1px, transparent 1px 28px),
+    var(--papel);
+  border: 1px solid var(--tinta);
+  padding: 22px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bloque-principal {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.cabecera-app {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--tinta);
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ceja-subtitulo {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+h1 {
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 26px;
+  margin: 2px 0 0 0;
+  letter-spacing: -0.01em;
+}
+
+.etiqueta-formula {
+  font-size: 11px;
+  border: 1px solid var(--tinta);
+  padding: 5px 10px;
+  background: var(--panel);
+  white-space: nowrap;
+}
+
+.cuadricula-principal {
+  display: grid;
+  grid-template-columns: 320px 1fr 300px;
+  gap: 18px;
+}
+
+@media (max-width: 1100px) {
+  .cuadricula-principal {
+    grid-template-columns: 1fr 1fr;
+  }
+  .columna-centro {
+    grid-column: span 2;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .cuadricula-principal {
+    grid-template-columns: 1fr;
+  }
+  .columna-centro {
+    grid-column: span 1;
+  }
+}
+
+.panel-controles, .panel-formula, .panel-patron-plano, .panel-grafico, .panel-exportar, .panel-procedimiento {
+  background: var(--panel);
+  border: 1px solid var(--tinta);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.panel-controles h2, .panel-formula h2, .panel-patron-plano h2, .panel-grafico h2, .panel-exportar h2 {
+  font-family: var(--fuente-display);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 0 0 14px 0;
+  border-bottom: 1px dashed var(--tinta-suave);
+  padding-bottom: 8px;
+}
+
+.campo-rango {
+  margin-bottom: 18px;
+}
+
+.campo-rango label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: var(--tinta-suave);
+}
+
+.campo-rango label span b {
+  color: var(--tinta);
+  font-size: 14px;
+}
+
+input[type=range] {
+  width: 100%;
+  accent-color: var(--acento);
+}
+
+.boton-optimo, .boton-exportar {
+  font-family: var(--fuente-mono);
+  font-size: 12px;
+  background: var(--acento);
+  color: var(--papel);
+  border: 1px solid var(--tinta);
+  padding: 9px 12px;
+  width: 100%;
+  cursor: pointer;
+  letter-spacing: .03em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.boton-optimo:hover, .boton-exportar:hover {
+  background: var(--acento-suave);
+  color: var(--tinta);
+}
+
+.bandera-estado {
+  margin-top: 10px;
+  font-size: 11px;
+  padding: 5px 8px;
+  border: 1px solid var(--tinta);
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.optimo-activo {
+  background: var(--optimo);
+}
+
+.optimo-inactivo {
+  background: transparent;
+}
+
+.bloque-formula {
+  background: var(--tinta);
+  color: var(--papel);
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.bloque-formula .fx {
+  color: var(--acento-suave);
+  font-weight: 700;
+}
+
+.bloque-formula .val {
+  color: var(--optimo);
+}
+
+.contenedor-visor-3d {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--tinta);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.lienzo-3d {
+  width: 100%;
+  height: 420px;
+  cursor: grab;
+}
+
+.lienzo-3d:active {
+  cursor: grabbing;
+}
+
+.informacion-dimensiones {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 11px;
+  text-align: right;
+  color: var(--tinta-suave);
+}
+
+.informacion-dimensiones b {
+  color: var(--tinta);
+}
+
+.leyenda-interaccion {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-size: 10px;
+  color: var(--tinta-suave);
+  letter-spacing: .05em;
+}
+
+.svg-patron, .svg-grafico {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.leyenda-pie {
+  font-size: 10px;
+  color: var(--tinta-suave);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.leyenda-patron {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  border-top: 1px dashed var(--tinta-suave);
+  padding-top: 8px;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+}
+
+.leyenda-color {
+  width: 12px;
+  height: 12px;
+  border: 0.5px solid var(--tinta);
+}
+
+.leyenda-color.descarte {
+  background: repeating-linear-gradient(45deg, #D9531E, #D9531E 2px, transparent 2px, transparent 4px);
+  opacity: 0.8;
+}
+
+.leyenda-color.base {
+  background: var(--kraft);
+  opacity: 0.15;
+}
+
+.leyenda-color.pestañas {
+  background: var(--tinta-suave);
+  opacity: 0.15;
+}
+
+.procedimiento-cabecera {
+  width: 100%;
+  background: var(--tinta);
+  color: var(--papel);
+  border: none;
+  padding: 12px;
+  font-family: var(--fuente-mono);
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.procedimiento-cabecera:hover {
+  background: var(--tinta-suave);
+}
+
+.procedimiento-cabecera .chevron {
+  transition: transform 0.2s;
+}
+
+.procedimiento-cabecera .chevron.abierto {
+  transform: rotate(180deg);
+}
+
+.procedimiento-contenido {
+  padding-top: 16px;
+}
+
+.paso-matematico {
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--tinta-suave);
+  padding-bottom: 14px;
+}
+
+.paso-matematico:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.paso-matematico h3 {
+  font-family: var(--fuente-display);
+  font-size: 11px;
+  margin: 0 0 6px 0;
+  color: var(--acento);
+}
+
+.paso-matematico p {
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
+  color: var(--tinta);
+}
+
+.bloque-codigo {
+  background: #F0EAD6;
+  border-left: 2px solid var(--tinta);
+  padding: 8px 12px;
+  font-size: 11px;
+  line-height: 1.6;
+}
