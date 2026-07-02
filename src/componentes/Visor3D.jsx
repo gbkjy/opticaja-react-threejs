@@ -181,7 +181,7 @@ export default function Visor3D() {
       const difX = e.clientX - ultimoXRef.current;
       const difY = e.clientY - ultimoYRef.current;
       rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current = Math.max(-1.4, Math.min(0.1, rotacionXRef.current + difY * 0.01));
+      rotacionXRef.current += difY * 0.01; // Permitir rotación completa de 360° en vertical y ver por debajo
       ultimoXRef.current = e.clientX;
       ultimoYRef.current = e.clientY;
     };
@@ -198,7 +198,7 @@ export default function Visor3D() {
       const difX = e.touches[0].clientX - ultimoXRef.current;
       const difY = e.touches[0].clientY - ultimoYRef.current;
       rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current = Math.max(-1.4, Math.min(0.1, rotacionXRef.current + difY * 0.01));
+      rotacionXRef.current += difY * 0.01; // Permitir rotación completa de 360° en vertical y ver por debajo
       ultimoXRef.current = e.touches[0].clientX;
       ultimoYRef.current = e.touches[0].clientY;
     };
