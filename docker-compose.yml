@@ -1,6 +1,6 @@
 services:
   opticaja:
-    build: .
+    image: ghcr.io/gbkjy/opticaja:latest
     container_name: opticaja
     restart: unless-stopped
     networks:
