@@ -8,8 +8,10 @@ export default function PatronPlano() {
   const escala = Math.min(margenMaximo / largo, margenMaximo / ancho);
   const w = largo * escala;
   const h = ancho * escala;
-  const cx = 20 + (margenMaximo - w) / 2;
-  const cy = 20 + (margenMaximo - h) / 2;
+  const wSvg = w + 40;
+  const hSvg = h + 40;
+  const cx = 20;
+  const cy = 20;
   const c = corte * escala;
 
   const aletas = [
@@ -29,7 +31,7 @@ export default function PatronPlano() {
   return (
     <div className="panel-patron-plano">
       <h2>Patrón plano</h2>
-      <svg viewBox="0 0 220 220" className="svg-patron">
+      <svg viewBox={`0 0 ${wSvg} ${hSvg}`} className="svg-patron">
         <defs>
           <pattern id="patronLineas" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
             <line x1="0" y1="0" x2="0" y2="6" stroke="#D9531E" strokeWidth="1" />

@@ -40,36 +40,82 @@ export default function Visor3D() {
     const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderizador.setSize(contenedor.clientWidth, contenedor.clientHeight);
     renderizador.setPixelRatio(window.devicePixelRatio || 1);
+    renderizador.shadowMap.enabled = true;
+    renderizador.shadowMap.type = THREE.PCFSoftShadowMap;
     contenedor.appendChild(renderizador.domElement);
     renderizadorRef.current = renderizador;
 
-    const luzAmbiental = new THREE.AmbientLight(0xffffff, 0.75);
+    const luzAmbiental = new THREE.AmbientLight(0xd0d8ff, 0.3);
     escena.add(luzAmbiental);
 
-    const luzDireccional = new THREE.DirectionalLight(0xffffff, 0.6);
-    luzDireccional.position.set(80, 120, 60);
-    escena.add(luzDireccional);
+    const luzPrincipal = new THREE.DirectionalLight(0xfff4dc, 1.4);
+    luzPrincipal.position.set(120, 160, 80);
+    luzPrincipal.castShadow = true;
+    luzPrincipal.shadow.mapSize.width = 1024;
+    luzPrincipal.shadow.mapSize.height = 1024;
+    luzPrincipal.shadow.camera.near = 0.5;
+    luzPrincipal.shadow.camera.far = 500;
+    const d = 150;
+    luzPrincipal.shadow.camera.left = -d;
+    luzPrincipal.shadow.camera.right = d;
+    luzPrincipal.shadow.camera.top = d;
+    luzPrincipal.shadow.camera.bottom = -d;
+    luzPrincipal.shadow.bias = -0.0005;
+    escena.add(luzPrincipal);
+
+    const luzRelleno = new THREE.DirectionalLight(0xc0cfff, 0.45);
+    luzRelleno.position.set(-100, 60, 40);
+    escena.add(luzRelleno);
+
+    const luzTrasera = new THREE.DirectionalLight(0xffeacc, 0.55);
+    luzTrasera.position.set(-30, 80, -120);
+    escena.add(luzTrasera);
 
     const cuadricula = new THREE.GridHelper(220, 22, 0x8F5C2B, 0xCBB68C);
-    cuadricula.position.y = -0.05;
+    cuadricula.position.y = 0.01;
     cuadricula.material.depthWrite = false;
     escena.add(cuadricula);
     cuadriculaRef.current = cuadricula;
+
+    const planoSueloGeo = new THREE.PlaneGeometry(1000, 1000);
+    const planoSueloMat = new THREE.ShadowMaterial({ opacity: 0.2 });
+    const planoSuelo = new THREE.Mesh(planoSueloGeo, planoSueloMat);
+    planoSuelo.rotation.x = -Math.PI / 2;
+    planoSuelo.position.y = 0;
+    planoSuelo.receiveShadow = true;
+    escena.add(planoSuelo);
 
     const grupo = new THREE.Group();
     escena.add(grupo);
     grupoRef.current = grupo;
 
-    const materialCaja = new THREE.MeshStandardMaterial({ 
-      color: 0xD2B48C, 
-      roughness: 0.85, 
-      metalness: 0.05,
-      side: THREE.DoubleSide
+    const lienzoBump = document.createElement("canvas");
+    lienzoBump.width = 128;
+    lienzoBump.height = 128;
+    const ctxBump = lienzoBump.getContext("2d");
+    ctxBump.fillStyle = "#808080";
+    ctxBump.fillRect(0, 0, 128, 128);
+    ctxBump.fillStyle = "#888888";
+    for (let i = 0; i < 128; i += 4) {
+      ctxBump.fillRect(0, i, 128, 2);
+    }
+    const texturaBump = new THREE.CanvasTexture(lienzoBump);
+    texturaBump.wrapS = THREE.RepeatWrapping;
+    texturaBump.wrapT = THREE.RepeatWrapping;
+    texturaBump.repeat.set(4, 4);
+
+    const materialCaja = new THREE.MeshStandardMaterial({
+      color: 0xC8A870,
+      roughness: 0.92,
+      metalness: 0.0,
+      side: THREE.DoubleSide,
+      bumpMap: texturaBump,
+      bumpScale: 0.15
     });
-    
+
     const geometriaMolde = new THREE.BoxGeometry(1, 1, 1);
     const geometriaBordesMolde = new THREE.EdgesGeometry(geometriaMolde);
-    const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233F });
+    const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233f, transparent: true, opacity: 0.35 });
 
     const formaTrapecio = new THREE.Shape();
     formaTrapecio.moveTo(0, 0);
@@ -93,6 +139,8 @@ export default function Visor3D() {
       const geo = i < 5 ? geometriaMolde : geometriaTrapecio;
       const geoBordes = i < 5 ? geometriaBordesMolde : geometriaBordesTrapecio;
       const malla = new THREE.Mesh(geo, materialCaja);
+      malla.castShadow = true;
+      malla.receiveShadow = true;
       grupo.add(malla);
       mallas.push(malla);
 
@@ -247,7 +295,9 @@ export default function Visor3D() {
         <br />
         volumen: <b>{volumen.toFixed(esMetros ? 4 : 2)}</b> {unidadVolumen}
       </div>
-      <div className="leyenda-interaccion">arrastra para rotar</div>
+      <div className="leyenda-interaccion">
+        <span className="icono-rotar">⟳</span> Arrastra para rotar en 3D
+      </div>
     </div>
   );
 }

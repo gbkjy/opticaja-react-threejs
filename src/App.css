@@ -96,11 +96,45 @@ h1 {
 }
 
 @media (max-width: 768px) {
+  .aplicacion {
+    padding: 10px;
+  }
   .cuadricula-principal {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .columna-izquierda {
+    order: 1;
   }
   .columna-centro {
-    grid-column: span 1;
+    order: 2;
+  }
+  .columna-derecha {
+    order: 3;
+  }
+  .lienzo-3d {
+    height: 300px;
+  }
+  .cabecera-app {
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 20px;
+  }
+}
+
+.seccion-patron-plano {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .seccion-patron-plano {
+    display: block;
+  }
+  .columna-derecha .panel-patron-plano {
+    display: none;
   }
 }
 
@@ -197,16 +231,20 @@ input[type=range] {
 
 .contenedor-visor-3d {
   position: relative;
-  background: var(--panel);
   border: 1px solid var(--tinta);
   overflow: hidden;
   margin-bottom: 18px;
+  background: radial-gradient(ellipse at 50% 42%, #F5EDD8 0%, #D8CDBA 45%, #A89880 100%);
 }
 
 .lienzo-3d {
   width: 100%;
   height: 420px;
   cursor: grab;
+}
+
+.lienzo-3d canvas {
+  background: transparent !important;
 }
 
 .lienzo-3d:active {
@@ -228,11 +266,25 @@ input[type=range] {
 
 .leyenda-interaccion {
   position: absolute;
-  bottom: 10px;
+  bottom: 12px;
   left: 12px;
   font-size: 10px;
-  color: var(--tinta-suave);
-  letter-spacing: .05em;
+  color: var(--tinta);
+  background: rgba(247, 242, 228, 0.85);
+  border: 1px solid var(--tinta);
+  padding: 4px 8px;
+  border-radius: 20px;
+  letter-spacing: .03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--fuente-mono);
+  box-shadow: 0 2px 6px rgba(18, 35, 63, 0.05);
+}
+
+.icono-rotar {
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .svg-patron, .svg-grafico {

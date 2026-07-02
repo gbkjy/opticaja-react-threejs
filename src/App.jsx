@@ -21,8 +21,6 @@ function App() {
           <div className="cuadricula-principal">
             <div className="columna-izquierda">
               <Controles />
-              <LecturaFormula />
-              <ExportarInforme />
             </div>
 
             <div className="columna-centro">
@@ -47,11 +45,15 @@ function App() {
                   <GraficoVolumen compacto={true} />
                 </div>
               </div>
+              <div className="seccion-patron-plano">
+                <PatronPlano />
+              </div>
               <PanelProcedimiento />
             </div>
 
             <div className="columna-derecha">
-              <PatronPlano />
+              <LecturaFormula />
+              <ExportarInforme />
               <PanelTapa />
             </div>
           </div>

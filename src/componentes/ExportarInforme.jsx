@@ -4,15 +4,15 @@ import autoTable from "jspdf-autotable";
 import { ContextoCaja } from "../contexto/ContextoCaja";
 
 export default function ExportarInforme() {
-  const { 
-    largo, 
-    ancho, 
-    corte, 
-    baseLargo, 
-    baseAncho, 
-    volumen, 
-    corteOptimo, 
-    volumenMaximo, 
+  const {
+    largo,
+    ancho,
+    corte,
+    baseLargo,
+    baseAncho,
+    volumen,
+    corteOptimo,
+    volumenMaximo,
     unidad,
     holguraTapa,
     tapaLargo,
@@ -139,13 +139,13 @@ export default function ExportarInforme() {
       head: [["Parámetro de tapa", "Valor sugerido", "Lámina requerida", "Holgura aplicada"]],
       body: [
         [
-          "Largo × Ancho interior", 
+          "Largo × Ancho interior",
           `${tapaLargo.toFixed(dec)} × ${tapaAncho.toFixed(dec)} ${unidad}`,
           `${tapaLaminaLargo.toFixed(dec)} × ${tapaLaminaAncho.toFixed(dec)} ${unidad}`,
           `${holguraTapa.toFixed(dec)} ${unidad} (4 mm)`
         ],
         [
-          "Altura de la tapa (H_t)", 
+          "Altura de la tapa (H_t)",
           `${tapaAlto.toFixed(dec)} ${unidad}`,
           `Área total: ${tapaArea.toFixed(esMetros ? 4 : 1)} ${unidadArea}`,
           "Ajuste holgado"
@@ -159,23 +159,23 @@ export default function ExportarInforme() {
     const ySeccion5 = doc.lastAutoTable.finalY + 8;
     doc.setFontSize(13);
     doc.setFont("Helvetica", "bold");
-    doc.text("5. Declaración de certificación industrial", 15, ySeccion5);
+    doc.text("5. Resumen de validación matemática", 15, ySeccion5);
 
     try {
       doc.addImage("/iconos/opticaja_logo.png", "PNG", 15, ySeccion5 + 3, 13, 13, undefined, "FAST");
-    } catch (e) {}
+    } catch (e) { }
 
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(8.2);
     doc.text(
-      "Se certifica que los cálculos anteriores han sido procesados y validados mediante cálculo\nanalítico de derivadas. El punto óptimo crítico V'(x) = 0 ha sido verificado como máximo\nabsoluto local por el criterio de la segunda derivada.",
+      "Se valida que los cálculos anteriores han sido procesados mediante cálculo analítico\nde derivadas. El punto óptimo crítico V'(x) = 0 ha sido verificado como máximo\nabsoluto local por el criterio de la segunda derivada.",
       32,
       ySeccion5 + 7
     );
 
     try {
       doc.addImage("/iconos/firma.png", "PNG", 165, ySeccion5 + 2, 22, 18);
-    } catch (e) {}
+    } catch (e) { }
 
     doc.setDrawColor(18, 35, 63);
     doc.line(15, ySeccion5 + 22, 195, ySeccion5 + 22);
@@ -191,7 +191,7 @@ export default function ExportarInforme() {
       <h2>Exportación de Documento</h2>
       <p>Genera un informe técnico formal e industrial en formato PDF para los parámetros configurados actualmente.</p>
       <button className="boton-exportar" onClick={generarPDF}>
-        Exportar Informe Técnico (PDF)
+        Exportar informe técnico (PDF)
       </button>
     </div>
   );

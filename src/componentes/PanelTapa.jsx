@@ -73,7 +73,7 @@ export default function PanelTapa() {
 
     const geometriaMolde = new THREE.BoxGeometry(1, 1, 1);
     const geometriaBordesMolde = new THREE.EdgesGeometry(geometriaMolde);
-    const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233F });
+    const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233f, transparent: true, opacity: 0.35 });
 
     // Forma trapezoidal unitaria para las aletas (corte diagonal del 40% arriba)
     const formaTrapecio = new THREE.Shape();
@@ -220,9 +220,9 @@ export default function PanelTapa() {
 
   return (
     <div className="panel-tapa" style={{ marginTop: "20px" }}>
-      <h2>Tapa telescópica complementaria</h2>
+      <h2>Diseño de la tapa ajustable</h2>
       <p style={{ fontSize: "12px", color: "var(--tinta-suave)", marginBottom: "10px" }}>
-        Especificaciones técnicas para cortar y fabricar la tapa superior compatible con la base optimizada.
+        Medidas exactas para cortar y armar la tapa perfecta para tu caja optimizada.
       </p>
 
       <div
@@ -240,23 +240,23 @@ export default function PanelTapa() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: "var(--fuente-mono)", fontSize: "12px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(18, 35, 63, 0.1)", paddingBottom: "6px" }}>
-          <span>Holgura aplicada:</span>
-          <b>{holguraTapa.toFixed(dec)} {unidad} (4 mm)</b>
+          <span>Margen de encaje:</span>
+          <b>4 mm</b>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(18, 35, 63, 0.1)", paddingBottom: "6px" }}>
-          <span>Base de la tapa:</span>
+          <span>Tapa armada (base):</span>
           <b>{tapaLargo.toFixed(dec)} × {tapaAncho.toFixed(dec)} {unidad}</b>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(18, 35, 63, 0.1)", paddingBottom: "6px" }}>
-          <span>Altura de la tapa:</span>
+          <span>Alto de la tapa (borde):</span>
           <b>{tapaAlto.toFixed(dec)} {unidad}</b>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid rgba(18, 35, 63, 0.1)", paddingBottom: "6px" }}>
-          <span>Lámina requerida (A_t × B_t):</span>
+          <span>Cartón para cortar (plano):</span>
           <b style={{ color: "var(--acento)" }}>{tapaLaminaLargo.toFixed(dec)} × {tapaLaminaAncho.toFixed(dec)} {unidad}</b>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: "2px" }}>
-          <span>Superficie de cartón:</span>
+          <span>Total de material usado:</span>
           <b>{tapaArea.toFixed(decArea)} {unidadArea}</b>
         </div>
       </div>
@@ -270,7 +270,7 @@ export default function PanelTapa() {
         fontSize: "11px",
         color: "var(--tinta)"
       }}>
-        💡 <b>Nota de manufactura:</b> Se ha configurado una holgura estándar para asegurar el deslizamiento telescópico de la tapa por sobre la base sin atascarse.
+        💡 <b>Nota de ajuste:</b> Añadimos automáticamente un margen de 4 mm en las esquinas para que la tapa entre y salga suavemente de la caja sin atascarse.
       </div>
     </div>
   );
