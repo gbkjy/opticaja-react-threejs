@@ -12,6 +12,7 @@ export function ProveedorCaja({ children }) {
   const [largo, setLargo] = useState(120);
   const [ancho, setAncho] = useState(80);
   const [corte, setCorte] = useState(15);
+  const [costoM2, setCostoM2] = useState(1000);
   const unidad = "cm";
 
   const valores = useMemo(() => {
@@ -31,6 +32,16 @@ export function ProveedorCaja({ children }) {
     const tapaLaminaLargo = tapaLargo + 2 * tapaAlto;
     const tapaLaminaAncho = tapaAncho + 2 * tapaAlto;
     const tapaArea = tapaLaminaLargo * tapaLaminaAncho;
+
+    const areaM2 = (largo * ancho) / 10000;
+    const costoActual = areaM2 * costoM2;
+
+    const xEstandar = limitarCorte(Math.min(largo, ancho) * 0.1, largo, ancho);
+    const volumenEstandar = obtenerVolumen(xEstandar, largo, ancho);
+    
+    const ratio = volumen / (volumenEstandar || 1);
+    const ahorroPorcentaje = ratio > 1 ? (1 - 1 / ratio) * 100 : (ratio - 1) * 100;
+    const ahorro1000 = 1000 * areaM2 * (ratio - 1) * costoM2;
 
     return {
       largo,
@@ -53,8 +64,13 @@ export function ProveedorCaja({ children }) {
       tapaLaminaLargo,
       tapaLaminaAncho,
       tapaArea,
+      costoM2,
+      setCostoM2,
+      costoActual,
+      ahorroPorcentaje,
+      ahorro1000,
     };
-  }, [largo, ancho, corte]);
+  }, [largo, ancho, corte, costoM2]);
 
   return (
     <ContextoCaja.Provider value={valores}>

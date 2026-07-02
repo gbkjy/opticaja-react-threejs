@@ -21,6 +21,7 @@ function App() {
           <div className="cuadricula-principal">
             <div className="columna-izquierda">
               <Controles />
+              <ExportarInforme />
             </div>
 
             <div className="columna-centro">
@@ -44,16 +45,30 @@ function App() {
                   </div>
                   <GraficoVolumen compacto={true} />
                 </div>
-              </div>
-              <div className="seccion-patron-plano">
-                <PatronPlano />
+
+                <div style={{
+                  position: "absolute",
+                  top: "12px",
+                  right: "12px",
+                  zIndex: 10,
+                  width: "210px",
+                  background: "rgba(247, 245, 240, 0.94)",
+                  border: "1px solid var(--tinta)",
+                  borderRadius: "4px",
+                  padding: "4px",
+                  boxShadow: "0 2px 8px rgba(18, 35, 63, 0.06)",
+                  pointerEvents: "none"
+                }}>
+                  <LecturaFormula compacto={true} />
+                </div>
               </div>
               <PanelProcedimiento />
             </div>
 
             <div className="columna-derecha">
-              <LecturaFormula />
-              <ExportarInforme />
+              <div className="seccion-patron-plano">
+                <PatronPlano />
+              </div>
               <PanelTapa />
             </div>
           </div>

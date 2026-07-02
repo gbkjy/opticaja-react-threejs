@@ -126,16 +126,7 @@ h1 {
 }
 
 .seccion-patron-plano {
-  display: none;
-}
-
-@media (max-width: 1100px) {
-  .seccion-patron-plano {
-    display: block;
-  }
-  .columna-derecha .panel-patron-plano {
-    display: none;
-  }
+  display: block;
 }
 
 .panel-controles, .panel-formula, .panel-patron-plano, .panel-grafico, .panel-exportar, .panel-procedimiento {

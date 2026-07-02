@@ -20,7 +20,11 @@ export default function ExportarInforme() {
     tapaAlto,
     tapaLaminaLargo,
     tapaLaminaAncho,
-    tapaArea
+    tapaArea,
+    costoM2,
+    costoActual,
+    ahorroPorcentaje,
+    ahorro1000
   } = useContext(ContextoCaja);
 
   const generarPDF = () => {
@@ -57,19 +61,52 @@ export default function ExportarInforme() {
     doc.setFontSize(8.5);
     doc.text(`Fecha de emisión: ${fecha}  |  Código de referencia: ${referencia}`, 15, 27);
 
+    const eficienciaOriginal = (volumen / volumenMaximo) * 100;
+
+    doc.setFillColor(245, 243, 238);
+    doc.setDrawColor(210, 205, 195);
+    doc.rect(15, 38, 56, 22, "FD");
+    doc.setTextColor(18, 35, 63);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text("Volumen máximo", 18, 44);
+    doc.setFontSize(12);
+    doc.text(`${volumenMaximo.toFixed(decVol)} ${unidadVolumen}`, 18, 53);
+
+    doc.setFillColor(245, 243, 238);
+    doc.setDrawColor(210, 205, 195);
+    doc.rect(77, 38, 56, 22, "FD");
+    doc.setTextColor(18, 35, 63);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text("Eficiencia de diseño", 80, 44);
+    doc.setFontSize(12);
+    doc.text(`${eficienciaOriginal.toFixed(1)} %`, 80, 53);
+
+    doc.setFillColor(245, 243, 238);
+    doc.setDrawColor(210, 205, 195);
+    doc.rect(139, 38, 56, 22, "FD");
+    doc.setTextColor(18, 35, 63);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text("Ahorro vs. caja estándar", 142, 44);
+    doc.setFontSize(12);
+    doc.text(`${ahorroPorcentaje.toFixed(1)} %`, 142, 53);
+
     doc.setTextColor(18, 35, 63);
     doc.setFontSize(13);
     doc.setFont("Helvetica", "bold");
-    doc.text("1. Datos de entrada y parámetros", 15, 43);
+    doc.text("1. Datos de entrada y parámetros", 15, 68);
 
     autoTable(doc, {
-      startY: 46,
+      startY: 71,
       head: [["Parámetro", "Símbolo", "Valor actual", "Descripción"]],
       body: [
         ["Largo de la lámina (A)", "A", `${largoStr} ${unidad}`, "Dimensión mayor de la plancha original de material"],
         ["Ancho de la lámina (B)", "B", `${anchoStr} ${unidad}`, "Dimensión menor de la plancha original de material"],
         ["Corte en esquina", "x", `${corte.toFixed(dec)} ${unidad}`, "Longitud de los cortes en cada esquina"],
         ["Área total de materia prima", "A_t", `${(largo * ancho).toFixed(esMetros ? 4 : 0)} ${unidadArea}`, "Superficie total disponible de material rectangular"],
+        ["Costo de cartón por caja", "-", `$${Math.round(costoActual).toLocaleString("es-CL")} CLP`, "Costo base del material rectangular"],
       ],
       theme: "plain",
       headStyles: { fillColor: [18, 35, 63], textColor: [239, 231, 211], fontStyle: "bold" },
@@ -81,8 +118,6 @@ export default function ExportarInforme() {
     doc.setFont("Helvetica", "bold");
     doc.text("2. Resultados del cálculo de optimización", 15, ySeccion2);
 
-    const eficienciaOriginal = (volumen / volumenMaximo) * 100;
-
     autoTable(doc, {
       startY: ySeccion2 + 3,
       head: [["Dimensión", "Fórmula", "Configuración actual", "Óptimo matemático (x*)"]],
@@ -92,6 +127,12 @@ export default function ExportarInforme() {
         ["Altura de la caja", "x", `${corte.toFixed(dec)} ${unidad}`, `${corteOptimo.toFixed(dec)} ${unidad}`],
         ["Volumen resultante", "V(x)", `${volumen.toFixed(decVol)} ${unidadVolumen}`, `${volumenMaximo.toFixed(decVol)} ${unidadVolumen}`],
         ["Eficiencia de diseño", "V/V_max", `${eficienciaOriginal.toFixed(1)} %`, "100.0 %"],
+        [
+          "Ahorro estimado (1.000 u.)",
+          "-",
+          "-",
+          `${ahorroPorcentaje >= 0 ? "" : "-"}$${Math.abs(Math.round(ahorro1000)).toLocaleString("es-CL")} CLP`
+        ],
       ],
       theme: "plain",
       headStyles: { fillColor: [18, 35, 63], textColor: [239, 231, 211], fontStyle: "bold" },
@@ -189,7 +230,9 @@ export default function ExportarInforme() {
   return (
     <div className="panel-exportar">
       <h2>Exportación de Documento</h2>
-      <p>Genera un informe técnico formal e industrial en formato PDF para los parámetros configurados actualmente.</p>
+      <p className="leyenda-pie" style={{ fontSize: "11px", color: "var(--tinta-suave)", marginBottom: "12px", marginTop: "0" }}>
+        Genera un informe técnico formal e industrial en formato PDF para los parámetros configurados actualmente.
+      </p>
       <button className="boton-exportar" onClick={generarPDF}>
         Exportar informe técnico (PDF)
       </button>
