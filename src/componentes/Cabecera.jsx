@@ -11,9 +11,6 @@ export default function Cabecera() {
         />
         <h1 style={{ fontSize: "32px", margin: 0 }}>Optimizador de volumen de cajas de cartón</h1>
       </div>
-      <div className="etiqueta-formula">
-        V(x) = x · (A − 2x)(B − 2x)
-      </div>
     </header>
   );
 }

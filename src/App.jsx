@@ -23,17 +23,36 @@ function App() {
               <Controles />
               <LecturaFormula />
               <ExportarInforme />
-              <PanelTapa />
             </div>
 
             <div className="columna-centro">
-              <Visor3D />
+              <div style={{ position: "relative" }}>
+                <Visor3D />
+                <div style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  zIndex: 10,
+                  width: "190px",
+                  background: "rgba(247, 245, 240, 0.94)",
+                  border: "1px solid var(--tinta)",
+                  borderRadius: "4px",
+                  padding: "4px",
+                  boxShadow: "0 2px 8px rgba(18, 35, 63, 0.06)",
+                  pointerEvents: "none"
+                }}>
+                  <div style={{ fontSize: "9px", fontFamily: "var(--fuente-mono)", textAlign: "center", marginBottom: "2px", borderBottom: "1px solid rgba(18, 35, 63, 0.08)", paddingBottom: "2px" }}>
+                    V(x) en el dominio
+                  </div>
+                  <GraficoVolumen compacto={true} />
+                </div>
+              </div>
               <PanelProcedimiento />
             </div>
 
             <div className="columna-derecha">
               <PatronPlano />
-              <GraficoVolumen />
+              <PanelTapa />
             </div>
           </div>
         </div>

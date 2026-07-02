@@ -12,7 +12,7 @@ export function ProveedorCaja({ children }) {
   const [largo, setLargo] = useState(120);
   const [ancho, setAncho] = useState(80);
   const [corte, setCorte] = useState(15);
-  const [unidad, setUnidad] = useState("cm");
+  const unidad = "cm";
 
   const valores = useMemo(() => {
     const corteValido = limitarCorte(corte, largo, ancho);
@@ -21,13 +21,13 @@ export function ProveedorCaja({ children }) {
     const volumen = obtenerVolumen(corteValido, largo, ancho);
     const corteOptimo = obtenerCorteOptimo(largo, ancho);
     const volumenMaximo = obtenerVolumenMaximo(largo, ancho);
-    const tolerancia = unidad === "m" ? 0.015 : 0.15;
+    const tolerancia = 0.15;
     const esOptimo = Math.abs(corteValido - corteOptimo) < tolerancia;
 
-    const holguraTapa = unidad === "m" ? 0.004 : 0.4;
+    const holguraTapa = 0.4;
     const tapaLargo = baseLargo + holguraTapa;
     const tapaAncho = baseAncho + holguraTapa;
-    const tapaAlto = corteOptimo / 2;
+    const tapaAlto = Math.min(corteOptimo / 2, 5.0);
     const tapaLaminaLargo = tapaLargo + 2 * tapaAlto;
     const tapaLaminaAncho = tapaAncho + 2 * tapaAlto;
     const tapaArea = tapaLaminaLargo * tapaLaminaAncho;
@@ -40,7 +40,6 @@ export function ProveedorCaja({ children }) {
       corte: corteValido,
       setCorte,
       unidad,
-      setUnidad,
       baseLargo,
       baseAncho,
       volumen,
@@ -55,7 +54,7 @@ export function ProveedorCaja({ children }) {
       tapaLaminaAncho,
       tapaArea,
     };
-  }, [largo, ancho, corte, unidad]);
+  }, [largo, ancho, corte]);
 
   return (
     <ContextoCaja.Provider value={valores}>

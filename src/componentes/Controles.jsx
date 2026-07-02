@@ -1,9 +1,30 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ContextoCaja } from "../contexto/ContextoCaja";
 
 export default function Controles() {
-  const { largo, setLargo, ancho, setAncho, corte, setCorte, corteOptimo, esOptimo, unidad, setUnidad } = useContext(ContextoCaja);
+  const { largo, setLargo, ancho, setAncho, corte, setCorte, corteOptimo, esOptimo, unidad } = useContext(ContextoCaja);
   const animacionRef = useRef(null);
+
+  const dimMin = 10;
+  const dimMax = 300;
+  const corteMax = Math.min(largo, ancho) / 2 - 0.5;
+  const cortePaso = 0.1;
+
+  const [txtLargo, setTxtLargo] = useState("");
+  const [txtAncho, setTxtAncho] = useState("");
+  const [txtCorte, setTxtCorte] = useState("");
+
+  useEffect(() => {
+    setTxtLargo(largo.toString());
+  }, [largo]);
+
+  useEffect(() => {
+    setTxtAncho(ancho.toString());
+  }, [ancho]);
+
+  useEffect(() => {
+    setTxtCorte(corte.toFixed(1));
+  }, [corte]);
 
   const irAlOptimo = () => {
     if (animacionRef.current) {
@@ -29,24 +50,6 @@ export default function Controles() {
     animacionRef.current = requestAnimationFrame(animar);
   };
 
-  const cambiarUnidad = (nuevaUnidad) => {
-    if (nuevaUnidad === unidad) return;
-    if (nuevaUnidad === "m") {
-      const nuevoLargo = Math.min(largo / 100, 3.0);
-      const nuevoAncho = Math.min(ancho / 100, 3.0);
-      setLargo(nuevoLargo);
-      setAncho(nuevoAncho);
-      setCorte(Math.min(corte / 100, Math.min(nuevoLargo, nuevoAncho) / 2 - 0.005));
-    } else {
-      const nuevoLargo = Math.min(largo * 100, 300);
-      const nuevoAncho = Math.min(ancho * 100, 300);
-      setLargo(nuevoLargo);
-      setAncho(nuevoAncho);
-      setCorte(Math.min(corte * 100, Math.min(nuevoLargo, nuevoAncho) / 2 - 0.5));
-    }
-    setUnidad(nuevaUnidad);
-  };
-
   useEffect(() => {
     return () => {
       if (animacionRef.current) {
@@ -55,69 +58,37 @@ export default function Controles() {
     };
   }, []);
 
-  const esMetros = unidad === "m";
-  const dimMin = esMetros ? 0.1 : 10;
-  const dimMax = esMetros ? 3.0 : 300;
-  const corteMax = esMetros ? (Math.min(largo, ancho) / 2 - 0.005) : (Math.min(largo, ancho) / 2 - 0.5);
-  const cortePaso = esMetros ? 0.001 : 0.1;
-
   const alCambiarLargoManual = (e) => {
-    let val = parseFloat(e.target.value) || 0;
-    if (val > dimMax) val = dimMax;
-    setLargo(val);
+    const val = e.target.value;
+    setTxtLargo(val);
+    const parsed = parseFloat(val);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setLargo(Math.min(parsed, dimMax));
+    }
   };
 
   const alCambiarAnchoManual = (e) => {
-    let val = parseFloat(e.target.value) || 0;
-    if (val > dimMax) val = dimMax;
-    setAncho(val);
+    const val = e.target.value;
+    setTxtAncho(val);
+    const parsed = parseFloat(val);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setAncho(Math.min(parsed, dimMax));
+    }
   };
 
   const alCambiarCorteManual = (e) => {
-    let val = parseFloat(e.target.value) || 0;
-    if (val > corteMax) val = corteMax;
-    if (val < 0) val = 0;
-    setCorte(val);
+    const val = e.target.value;
+    setTxtCorte(val);
+    const parsed = parseFloat(val);
+    if (!isNaN(parsed) && parsed >= 0) {
+      let verif = Math.min(parsed, corteMax);
+      setCorte(verif);
+    }
   };
 
   return (
     <div className="panel-controles">
       <h2>Parámetros</h2>
-
-      <div className="selector-unidades" style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-        <button
-          className={`boton-unidad ${!esMetros ? "activo" : ""}`}
-          style={{
-            flex: 1,
-            padding: "6px",
-            fontFamily: "var(--fuente-mono)",
-            fontSize: "11px",
-            background: !esMetros ? "var(--tinta)" : "var(--panel)",
-            color: !esMetros ? "var(--papel)" : "var(--tinta)",
-            border: "1px solid var(--tinta)",
-            cursor: "pointer"
-          }}
-          onClick={() => cambiarUnidad("cm")}
-        >
-          Centímetros (cm)
-        </button>
-        <button
-          className={`boton-unidad ${esMetros ? "activo" : ""}`}
-          style={{
-            flex: 1,
-            padding: "6px",
-            fontFamily: "var(--fuente-mono)",
-            fontSize: "11px",
-            background: esMetros ? "var(--tinta)" : "var(--panel)",
-            color: esMetros ? "var(--papel)" : "var(--tinta)",
-            border: "1px solid var(--tinta)",
-            cursor: "pointer"
-          }}
-          onClick={() => cambiarUnidad("m")}
-        >
-          Metros (m)
-        </button>
-      </div>
       
       <div className="campo-rango" style={{ marginBottom: "16px" }}>
         <label style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
@@ -127,8 +98,8 @@ export default function Controles() {
               type="number"
               min={dimMin}
               max={dimMax}
-              step={esMetros ? "0.01" : "1"}
-              value={largo || ""}
+              step="1"
+              value={txtLargo}
               onChange={alCambiarLargoManual}
               style={{
                 width: "80px",
@@ -154,8 +125,8 @@ export default function Controles() {
               type="number"
               min={dimMin}
               max={dimMax}
-              step={esMetros ? "0.01" : "1"}
-              value={ancho || ""}
+              step="1"
+              value={txtAncho}
               onChange={alCambiarAnchoManual}
               style={{
                 width: "80px",
@@ -183,7 +154,7 @@ export default function Controles() {
               min="0"
               max={corteMax}
               step={cortePaso}
-              value={Number(corte.toFixed(esMetros ? 3 : 1)) || ""}
+              value={txtCorte}
               onChange={alCambiarCorteManual}
               style={{
                 width: "80px",

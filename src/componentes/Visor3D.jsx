@@ -12,6 +12,7 @@ export default function Visor3D() {
 
   const carasMallasRef = useRef([]);
   const carasBordesRef = useRef([]);
+  const cuadriculaRef = useRef(null);
 
   const arrastrandoRef = useRef(false);
   const ultimoXRef = useRef(0);
@@ -53,6 +54,7 @@ export default function Visor3D() {
     cuadricula.position.y = -0.05;
     cuadricula.material.depthWrite = false;
     escena.add(cuadricula);
+    cuadriculaRef.current = cuadricula;
 
     const grupo = new THREE.Group();
     escena.add(grupo);
@@ -69,15 +71,32 @@ export default function Visor3D() {
     const geometriaBordesMolde = new THREE.EdgesGeometry(geometriaMolde);
     const materialBordes = new THREE.LineBasicMaterial({ color: 0x12233F });
 
+    const formaTrapecio = new THREE.Shape();
+    formaTrapecio.moveTo(0, 0);
+    formaTrapecio.lineTo(1, 0);
+    formaTrapecio.lineTo(0.6, 1);
+    formaTrapecio.lineTo(0, 1);
+    formaTrapecio.closePath();
+
+    const opcionesExtrusion = {
+      depth: 1,
+      bevelEnabled: false
+    };
+    const geometriaTrapecio = new THREE.ExtrudeGeometry(formaTrapecio, opcionesExtrusion);
+    geometriaTrapecio.translate(0, 0, -0.5);
+    const geometriaBordesTrapecio = new THREE.EdgesGeometry(geometriaTrapecio);
+
     const mallas = [];
     const bordes = [];
 
-    for (let i = 0; i < 5; i++) {
-      const malla = new THREE.Mesh(geometriaMolde, materialCaja);
+    for (let i = 0; i < 9; i++) {
+      const geo = i < 5 ? geometriaMolde : geometriaTrapecio;
+      const geoBordes = i < 5 ? geometriaBordesMolde : geometriaBordesTrapecio;
+      const malla = new THREE.Mesh(geo, materialCaja);
       grupo.add(malla);
       mallas.push(malla);
 
-      const borde = new THREE.LineSegments(geometriaBordesMolde, materialBordes);
+      const borde = new THREE.LineSegments(geoBordes, materialBordes);
       grupo.add(borde);
       bordes.push(borde);
     }
@@ -112,24 +131,24 @@ export default function Visor3D() {
       const difX = e.clientX - ultimoXRef.current;
       const difY = e.clientY - ultimoYRef.current;
       rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current = Math.max(-1.1, Math.min(0.2, rotacionXRef.current + difY * 0.01));
+      rotacionXRef.current = Math.max(-1.4, Math.min(0.1, rotacionXRef.current + difY * 0.01));
       ultimoXRef.current = e.clientX;
       ultimoYRef.current = e.clientY;
     };
 
     const alIniciarTouch = (e) => {
-      if (e.touches.length === 0) return;
+      if (e.touches.length !== 1) return;
       arrastrandoRef.current = true;
       ultimoXRef.current = e.touches[0].clientX;
       ultimoYRef.current = e.touches[0].clientY;
     };
 
     const alMoverTouch = (e) => {
-      if (!arrastrandoRef.current || e.touches.length === 0) return;
+      if (!arrastrandoRef.current || e.touches.length !== 1) return;
       const difX = e.touches[0].clientX - ultimoXRef.current;
       const difY = e.touches[0].clientY - ultimoYRef.current;
       rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current = Math.max(-1.1, Math.min(0.2, rotacionXRef.current + difY * 0.01));
+      rotacionXRef.current = Math.max(-1.4, Math.min(0.1, rotacionXRef.current + difY * 0.01));
       ultimoXRef.current = e.touches[0].clientX;
       ultimoYRef.current = e.touches[0].clientY;
     };
@@ -165,11 +184,13 @@ export default function Visor3D() {
       materialCaja.dispose();
       geometriaBordesMolde.dispose();
       materialBordes.dispose();
+      geometriaTrapecio.dispose();
+      geometriaBordesTrapecio.dispose();
     };
   }, []);
 
   useEffect(() => {
-    if (carasMallasRef.current.length < 5 || carasBordesRef.current.length < 5) return;
+    if (carasMallasRef.current.length < 9 || carasBordesRef.current.length < 9) return;
 
     const largoEscalado = Math.max(baseLargo * escalaVisual, 0.001);
     const anchoEscalado = Math.max(baseAncho * escalaVisual, 0.001);
@@ -193,7 +214,28 @@ export default function Visor3D() {
     actualizarMallas(3, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: -largoEscalado / 2 + t / 2, y: altoEscalado / 2 + t / 2, z: 0 });
     actualizarMallas(4, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: largoEscalado / 2 - t / 2, y: altoEscalado / 2 + t / 2, z: 0 });
 
-  }, [baseLargo, baseAncho, corte, escalaVisual]);
+    // Aletas de pegado de la base principal (mallas 5 a 8) dobladas en las esquinas interiores
+    const aletaLargo = Math.max(altoEscalado, 0.1);
+    const offset = 0.05;
+    const aletaY = t + offset;
+    const aletaAltoEscalada = altoEscalado - offset * 2;
+
+    actualizarMallas(5, { x: aletaLargo, y: aletaAltoEscalada, z: t }, { x: -largoEscalado / 2 + t, y: aletaY, z: anchoEscalado / 2 - t - offset });
+    actualizarMallas(6, { x: -aletaLargo, y: aletaAltoEscalada, z: t }, { x: largoEscalado / 2 - t, y: aletaY, z: anchoEscalado / 2 - t - offset });
+    actualizarMallas(7, { x: aletaLargo, y: aletaAltoEscalada, z: t }, { x: -largoEscalado / 2 + t, y: aletaY, z: -anchoEscalado / 2 + t + offset });
+    actualizarMallas(8, { x: -aletaLargo, y: aletaAltoEscalada, z: t }, { x: largoEscalado / 2 - t, y: aletaY, z: -anchoEscalado / 2 + t + offset });
+
+    if (camaraRef.current) {
+      const dimensionMayor = Math.max(largo, ancho);
+      const factor = Math.max(1, dimensionMayor / 120);
+      camaraRef.current.position.set(0, 100 * factor, 180 * factor);
+
+      if (cuadriculaRef.current) {
+        cuadriculaRef.current.scale.set(factor, 1, factor);
+      }
+    }
+
+  }, [baseLargo, baseAncho, corte, escalaVisual, largo, ancho]);
 
   return (
     <div className="contenedor-visor-3d">
