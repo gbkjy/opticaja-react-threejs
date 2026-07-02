@@ -386,9 +386,59 @@ input[type=range] {
 }
 
 .bloque-codigo {
-  background: #F0EAD6;
   border-left: 2px solid var(--tinta);
   padding: 8px 12px;
   font-size: 11px;
   line-height: 1.6;
+}
+
+.widget-grafico {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  width: 190px;
+  background: rgba(247, 245, 240, 0.94);
+  border: 1px solid var(--tinta);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(18, 35, 63, 0.06);
+  pointer-events: none;
+}
+
+.widget-formula {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  width: 210px;
+  background: rgba(247, 245, 240, 0.94);
+  border: 1px solid var(--tinta);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(18, 35, 63, 0.06);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .widget-formula {
+    display: none !important;
+  }
+}
+
+.mostrar-movil {
+  display: none;
+}
+
+.ocultar-movil {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mostrar-movil {
+    display: block;
+  }
+  .ocultar-movil {
+    display: none;
+  }
 }

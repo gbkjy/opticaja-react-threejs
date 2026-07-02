@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { ContextoCaja } from "../contexto/ContextoCaja";
+import GraficoVolumen from "./GraficoVolumen";
+import LecturaFormula from "./LecturaFormula";
 
 export default function Visor3D() {
   const { largo, ancho, corte, baseLargo, baseAncho, volumen, unidad } = useContext(ContextoCaja);
@@ -294,6 +296,15 @@ export default function Visor3D() {
         alto: <b>{corte.toFixed(decimales)}</b> {unidad}
         <br />
         volumen: <b>{volumen.toFixed(esMetros ? 4 : 2)}</b> {unidadVolumen}
+      </div>
+      <div className="widget-grafico">
+        <div style={{ fontSize: "9px", fontFamily: "var(--fuente-mono)", textAlign: "center", marginBottom: "2px", borderBottom: "1px solid rgba(18, 35, 63, 0.08)", paddingBottom: "2px" }}>
+          V(x) en el dominio
+        </div>
+        <GraficoVolumen compacto={true} />
+      </div>
+      <div className="widget-formula">
+        <LecturaFormula compacto={true} />
       </div>
       <div className="leyenda-interaccion">
         <span className="icono-rotar">⟳</span> Arrastra para rotar en 3D
