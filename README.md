@@ -25,7 +25,7 @@
 </p>
 
 <p align="center">
-  <img src="screenshots/gif_demo.gif" alt="Demostración de OptiCaja" width="80%"/>
+  <img src="screenshots/gif_demo_v2.gif" alt="Demostración de OptiCaja" width="80%"/>
 </p>
 
 ---
@@ -159,14 +159,8 @@ El repositorio contiene únicamente los archivos de código fuente, configuracio
 ├── public/
 │   ├── iconos/                 # Recursos e iconos de la PWA
 │   ├── favicon.svg             # Favicon en formato vectorial SVG
-│   ├── favicon_opticaja.png    # Icono del empaque de OptiCaja
 │   ├── manifest.json           # Manifiesto web de la PWA
 │   └── sw.js                   # Service Worker (gestión de caché y offline)
-├── screenshots/
-│   ├── chrome_install.png      # Captura de botón de instalación en Chrome
-│   ├── windows_install.png     # Captura de aplicación instalada en Windows
-│   ├── gif_demo.gif            # Demostración animada (GIF) del proyecto
-│   └── diagramadespliegue.png  # Diagrama de arquitectura y despliegue UML
 ├── src/
 │   ├── assets/                 # Gráficos estáticos complementarios
 │   ├── componentes/            # Componentes React (3D, 2D, SVG y UI)
