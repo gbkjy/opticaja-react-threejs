@@ -278,10 +278,18 @@ input[type=range] {
   font-weight: bold;
 }
 
-.svg-patron, .svg-grafico {
+.svg-grafico {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.svg-patron {
+  max-height: 240px;
+  width: auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 .leyenda-pie {

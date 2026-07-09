@@ -6,11 +6,16 @@ import LecturaFormula from "./LecturaFormula";
 
 export default function Visor3D() {
   const { largo, ancho, corte, baseLargo, baseAncho, volumen, unidad } = useContext(ContextoCaja);
+  const largoRef = useRef(largo);
+  const anchoRef = useRef(ancho);
+  largoRef.current = largo;
+  anchoRef.current = ancho;
   const contenedorRef = useRef(null);
   const escenaRef = useRef(null);
   const renderizadorRef = useRef(null);
   const camaraRef = useRef(null);
   const grupoRef = useRef(null);
+  const luzPrincipalRef = useRef(null);
 
   const carasMallasRef = useRef([]);
   const carasBordesRef = useRef([]);
@@ -19,7 +24,7 @@ export default function Visor3D() {
   const ultimoXRef = useRef(0);
   const ultimoYRef = useRef(0);
   const rotacionYRef = useRef(0.6);
-  const rotacionXRef = useRef(-0.35);
+  const rotacionXRef = useRef(1.1);
 
   const esMetros = unidad === "m";
   const escalaVisual = esMetros ? 100 : 1;
@@ -52,8 +57,9 @@ export default function Visor3D() {
     const luzPrincipal = new THREE.DirectionalLight(0xfff4dc, 1.4);
     luzPrincipal.position.set(120, 160, 80);
     luzPrincipal.castShadow = true;
-    luzPrincipal.shadow.mapSize.width = 1024;
-    luzPrincipal.shadow.mapSize.height = 1024;
+    luzPrincipal.shadow.mapSize.width = 2048;
+    luzPrincipal.shadow.mapSize.height = 2048;
+    luzPrincipal.shadow.radius = 4;
     luzPrincipal.shadow.camera.near = 0.5;
     luzPrincipal.shadow.camera.far = 500;
     const d = 150;
@@ -63,6 +69,7 @@ export default function Visor3D() {
     luzPrincipal.shadow.camera.bottom = -d;
     luzPrincipal.shadow.bias = -0.0005;
     escena.add(luzPrincipal);
+    luzPrincipalRef.current = luzPrincipal;
 
     const luzRelleno = new THREE.DirectionalLight(0xc0cfff, 0.45);
     luzRelleno.position.set(-100, 60, 40);
@@ -150,12 +157,23 @@ export default function Visor3D() {
     let idAnimacion;
     const renderizar = () => {
       idAnimacion = requestAnimationFrame(renderizar);
-      if (grupo) {
-        grupo.rotation.y = rotacionYRef.current;
-        grupo.rotation.x = rotacionXRef.current * 0.3;
+      if (camaraRef.current) {
+        const camaraObj = camaraRef.current;
+        const currentLargo = largoRef.current;
+        const currentAncho = anchoRef.current;
+        const dimensionMayor = Math.max(currentLargo, currentAncho);
+        const factor = Math.max(1, dimensionMayor / 120);
+        const baseRadius = 220 * factor;
+        const theta = rotacionYRef.current;
+        const phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.05, rotacionXRef.current));
+        const targetY = 10 * factor;
+        const x = baseRadius * Math.sin(phi) * Math.sin(theta);
+        const y = targetY + baseRadius * Math.cos(phi);
+        const z = baseRadius * Math.sin(phi) * Math.cos(theta);
+        camaraObj.position.set(x, y, z);
+        camaraObj.lookAt(0, targetY, 0);
       }
-      camara.lookAt(0, 20, 0);
-      renderizador.render(escena, camara);
+      renderizador.render(escena, camaraRef.current);
     };
     renderizar();
 
@@ -173,8 +191,8 @@ export default function Visor3D() {
       if (!arrastrandoRef.current) return;
       const difX = e.clientX - ultimoXRef.current;
       const difY = e.clientY - ultimoYRef.current;
-      rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current += difY * 0.01; // Permitir rotación completa de 360° en vertical y ver por debajo
+      rotacionYRef.current -= difX * 0.01;
+      rotacionXRef.current = Math.max(0.1, Math.min(Math.PI / 2 - 0.05, rotacionXRef.current - difY * 0.01));
       ultimoXRef.current = e.clientX;
       ultimoYRef.current = e.clientY;
     };
@@ -190,8 +208,8 @@ export default function Visor3D() {
       if (!arrastrandoRef.current || e.touches.length !== 1) return;
       const difX = e.touches[0].clientX - ultimoXRef.current;
       const difY = e.touches[0].clientY - ultimoYRef.current;
-      rotacionYRef.current += difX * 0.01;
-      rotacionXRef.current += difY * 0.01; // Permitir rotación completa de 360° en vertical y ver por debajo
+      rotacionYRef.current -= difX * 0.01;
+      rotacionXRef.current = Math.max(0.1, Math.min(Math.PI / 2 - 0.05, rotacionXRef.current - difY * 0.01));
       ultimoXRef.current = e.touches[0].clientX;
       ultimoYRef.current = e.touches[0].clientY;
     };
@@ -257,7 +275,6 @@ export default function Visor3D() {
     actualizarMallas(3, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: -largoEscalado / 2 + t / 2, y: altoEscalado / 2 + t / 2, z: 0 });
     actualizarMallas(4, { x: t, y: altoEscalado, z: anchoEscalado - 2 * t }, { x: largoEscalado / 2 - t / 2, y: altoEscalado / 2 + t / 2, z: 0 });
 
-    // Aletas de pegado de la base principal (mallas 5 a 8) dobladas en las esquinas interiores
     const aletaLargo = Math.max(altoEscalado, 0.1);
     const offset = 0.05;
     const aletaY = t + offset;
@@ -272,6 +289,17 @@ export default function Visor3D() {
       const dimensionMayor = Math.max(largo, ancho);
       const factor = Math.max(1, dimensionMayor / 120);
       camaraRef.current.position.set(0, 100 * factor, 180 * factor);
+    }
+
+    if (luzPrincipalRef.current) {
+      const dimensionMayor = Math.max(largo, ancho) * escalaVisual;
+      const d = Math.max(150, dimensionMayor * 1.1);
+      const luz = luzPrincipalRef.current;
+      luz.shadow.camera.left = -d;
+      luz.shadow.camera.right = d;
+      luz.shadow.camera.top = d;
+      luz.shadow.camera.bottom = -d;
+      luz.shadow.camera.updateProjectionMatrix();
     }
 
   }, [baseLargo, baseAncho, corte, escalaVisual, largo, ancho]);

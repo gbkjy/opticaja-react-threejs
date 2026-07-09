@@ -115,6 +115,59 @@ export default function Controles() {
     }
   };
 
+  const alPerderFocoLargo = () => {
+    const parsed = parseFloat(txtLargo);
+    if (isNaN(parsed) || parsed < dimMin) {
+      setLargo(dimMin);
+      setTxtLargo(dimMin.toString());
+    } else if (parsed > dimMax) {
+      setLargo(dimMax);
+      setTxtLargo(dimMax.toString());
+    } else {
+      setLargo(parsed);
+      setTxtLargo(parsed.toString());
+    }
+  };
+
+  const alPerderFocoAncho = () => {
+    const parsed = parseFloat(txtAncho);
+    if (isNaN(parsed) || parsed < dimMin) {
+      setAncho(dimMin);
+      setTxtAncho(dimMin.toString());
+    } else if (parsed > dimMax) {
+      setAncho(dimMax);
+      setTxtAncho(dimMax.toString());
+    } else {
+      setAncho(parsed);
+      setTxtAncho(parsed.toString());
+    }
+  };
+
+  const alPerderFocoCorte = () => {
+    const parsed = parseFloat(txtCorte);
+    if (isNaN(parsed) || parsed < 0) {
+      setCorte(0);
+      setTxtCorte("0.0");
+    } else if (parsed > corteMax) {
+      setCorte(corteMax);
+      setTxtCorte(corteMax.toFixed(1));
+    } else {
+      setCorte(parsed);
+      setTxtCorte(parsed.toFixed(1));
+    }
+  };
+
+  const alPerderFocoCosto = () => {
+    const parsed = parseFloat(txtCostoM2);
+    if (isNaN(parsed) || parsed < 0) {
+      setCostoM2(0);
+      setTxtCostoM2("0");
+    } else {
+      setCostoM2(parsed);
+      setTxtCostoM2(parsed.toString());
+    }
+  };
+
   return (
     <div className="panel-controles">
       <h2>Parámetros</h2>
@@ -130,6 +183,7 @@ export default function Controles() {
               step="1"
               value={txtLargo}
               onChange={alCambiarLargoManual}
+              onBlur={alPerderFocoLargo}
               style={{
                 width: "80px",
                 padding: "4px",
@@ -157,6 +211,7 @@ export default function Controles() {
               step="1"
               value={txtAncho}
               onChange={alCambiarAnchoManual}
+              onBlur={alPerderFocoAncho}
               style={{
                 width: "80px",
                 padding: "4px",
@@ -185,6 +240,7 @@ export default function Controles() {
               step={cortePaso}
               value={txtCorte}
               onChange={alCambiarCorteManual}
+              onBlur={alPerderFocoCorte}
               style={{
                 width: "80px",
                 padding: "4px",
@@ -219,6 +275,7 @@ export default function Controles() {
               step="10"
               value={txtCostoM2}
               onChange={alCambiarCostoManual}
+              onBlur={alPerderFocoCosto}
               style={{
                 width: "80px",
                 padding: "4px",

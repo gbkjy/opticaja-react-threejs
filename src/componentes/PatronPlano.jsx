@@ -4,15 +4,19 @@ import { ContextoCaja } from "../contexto/ContextoCaja";
 export default function PatronPlano() {
   const { largo, ancho, corte, unidad } = useContext(ContextoCaja);
 
+  const largoSano = Math.max(Number(largo) || 0, 1);
+  const anchoSano = Math.max(Number(ancho) || 0, 1);
+  const corteSano = Math.max(Number(corte) || 0, 0);
+
   const margenMaximo = 180;
-  const escala = Math.min(margenMaximo / largo, margenMaximo / ancho);
-  const w = largo * escala;
-  const h = ancho * escala;
+  const escala = Math.min(margenMaximo / largoSano, margenMaximo / anchoSano);
+  const w = largoSano * escala;
+  const h = anchoSano * escala;
   const wSvg = w + 40;
   const hSvg = h + 40;
   const cx = 20;
   const cy = 20;
-  const c = corte * escala;
+  const c = corteSano * escala;
 
   const aletas = [
     `${cx},${cy + c} ${cx + c},${cy + c} ${cx + c},${cy} ${cx + c / 2},${cy}`,

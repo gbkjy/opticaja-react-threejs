@@ -5,11 +5,14 @@ import { obtenerVolumen } from "../matematica/modeloCaja";
 export default function GraficoVolumen({ compacto = false }) {
   const { largo, ancho, corte, volumen, corteOptimo, volumenMaximo } = useContext(ContextoCaja);
 
+  const largoSano = Math.max(Number(largo) || 0, 1);
+  const anchoSano = Math.max(Number(ancho) || 0, 1);
+
   const svgAncho = 220;
   const svgAlto = compacto ? 110 : 120;
   const margen = 16;
-  const limiteX = Math.min(largo, ancho) / 2;
-  const limiteV = volumenMaximo * 1.15;
+  const limiteX = Math.min(largoSano, anchoSano) / 2;
+  const limiteV = Math.max(volumenMaximo * 1.15, 0.1);
 
   let coordenadasCamino = "";
   const pasos = 60;
